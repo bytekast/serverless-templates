@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy'
+}
+
+ext.serviceName = System.getenv('SERVICE_NAME') ?: "$SERVICE_NAME"
+ext.serviceVersion = System.getenv('SERVICE_VERSION') ?: "$SERVICE_VERSION"
+
+
+dependencies {
+    runtime group: "stedi", name: "$serviceName", version: "$serviceVersion", ext: "zip"
+}
+
+task download(type: Copy) {
+    from sourceSets.main.runtimeClasspath
+    into 'build/stage/'
+}
+
+task unzip(type: Copy) {
+    def zipFile = file("build/stage/${serviceName}-${serviceVersion}.zip")
+    def outputDir = file("build/deploy")
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
+build.dependsOn unzip
+unzip.dependsOn download
