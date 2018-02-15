@@ -1,8 +1,0 @@
-
-service: deployer
-
-provider:
-  name: aws
-  runtime: java8
-  timeout: 300
-  profile: bytekast
