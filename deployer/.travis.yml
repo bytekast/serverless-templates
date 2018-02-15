@@ -11,7 +11,7 @@ install:
   - echo "skip 'gradle assemble' step"
 script:
   - "./gradlew build --info"
-before_deploy"
+before_deploy:
   - "cd ./build/deploy"
 deploy:
   provider: script
