@@ -3,6 +3,7 @@ plugins {
     id 'groovy'
     id 'net.researchgate.release' version '2.5.0'
     id 'jacoco'
+    id 'maven-publish'
 }
 
 repositories {
@@ -68,6 +69,21 @@ jacocoTestReport {
     reports {
         xml.enabled true
         html.enabled false
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            version = project.version
+            artifactId = project.name
+            groupId = project.group
+            artifact("$buildDir/libs/${project.name}-${project.version}.jar")
+            artifact("$buildDir/distributions/${project.name}-${project.version}.zip")
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
     }
 }
 
