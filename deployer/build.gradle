@@ -2,12 +2,19 @@ plugins {
     id 'groovy'
 }
 
+ext.serviceGroup = System.getenv('SERVICE_GROUP') ?: "$SERVICE_GROUP"
 ext.serviceName = System.getenv('SERVICE_NAME') ?: "$SERVICE_NAME"
 ext.serviceVersion = System.getenv('SERVICE_VERSION') ?: "$SERVICE_VERSION"
 
 
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
-    runtime group: "stedi", name: "$serviceName", version: "$serviceVersion", ext: "zip"
+    runtime group: "$serviceGroup", name: "$serviceName", version: "$serviceVersion", ext: "zip"
 }
 
 task download(type: Copy) {
