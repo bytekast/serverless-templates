@@ -14,13 +14,13 @@ class Handler implements RequestHandler<Map<String, Object>, ApiGatewayResponse>
   ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
     LOG.info("received: " + input)
     com.bytekast.Response responseBody = com.bytekast.Response.builder()
-        .message('Go Serverless v1.x! Your function executed successfully!')
-        .input(input)
-        .build()
+                                            .message('Go Serverless v1.x! Your function executed successfully!')
+                                            .input(input)
+                                            .build()
     return ApiGatewayResponse.builder()
-        .statusCode(200)
-        .body(responseBody.toJson())
-        .headers(['X-Powered-By': 'AWS Lambda & serverless'])
-        .build()
+                             .statusCode(200)
+                             .body(responseBody.toJson())
+                             .headers(['X-Powered-By': 'AWS Lambda & serverless'])
+                             .build()
   }
 }

@@ -1,90 +1,90 @@
 plugins {
-    id 'idea'
-    id 'groovy'
-    id 'net.researchgate.release' version '2.5.0'
-    id 'jacoco'
-    id 'maven-publish'
+  id 'idea'
+  id 'groovy'
+  id 'net.researchgate.release' version '2.5.0'
+  id 'jacoco'
+  id 'maven-publish'
 }
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 configurations.all {
-    resolutionStrategy {
-        cacheChangingModulesFor 0, 'seconds'
-    }
+  resolutionStrategy {
+    cacheChangingModulesFor 0, 'seconds'
+  }
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile(
-            'org.codehaus.groovy:groovy-all:2.4.13',
-            'com.amazonaws:aws-lambda-java-core:1.1.0',
-            'com.amazonaws:aws-lambda-java-log4j:1.0.0'
-    )
+  compile(
+      'org.codehaus.groovy:groovy-all:2.4.13',
+      'com.amazonaws:aws-lambda-java-core:1.1.0',
+      'com.amazonaws:aws-lambda-java-log4j:1.0.0'
+  )
 
-    testCompile(
-            'org.spockframework:spock-core:1.1-groovy-2.4'
-    )
+  testCompile(
+      'org.spockframework:spock-core:1.1-groovy-2.4'
+  )
 }
 
 task(buildJson) {
-    doLast {
-        def buildJson = new File("$buildDir/build.json")
-        def dist = relativePath(packageFunctions.archivePath)
-        buildJson.newWriter().withWriter { w ->
-            w << groovy.json.JsonOutput.toJson([distribution: dist, version: packageFunctions.version])
-        }
+  doLast {
+    def buildJson = new File("$buildDir/build.json")
+    def dist = relativePath(packageFunctions.archivePath)
+    buildJson.newWriter().withWriter { w ->
+      w << groovy.json.JsonOutput.toJson([distribution: dist, version: packageFunctions.version])
     }
+  }
 }
 
 task packageFunctions(type: Zip) {
-    baseName = "${project.name}-functions"
-    from compileGroovy
-    from processResources
-    into('lib') {
-        from configurations.runtime
-    }
+  baseName = "${project.name}-functions"
+  from compileGroovy
+  from processResources
+  into('lib') {
+    from configurations.runtime
+  }
 }
 
 task buildZip(type: Zip) {
-    from('.') {
-        include 'serverless*.yml'
-        include 'node_modules/'
-        include '*.sh'
-        include 'build/build.json'
-        include relativePath(packageFunctions.archivePath)
-    }
+  from('.') {
+    include 'serverless*.yml'
+    include 'node_modules/'
+    include '*.sh'
+    include 'build/build.json'
+    include relativePath(packageFunctions.archivePath)
+  }
 }
 
 task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+  classifier = 'sources'
+  from sourceSets.main.allSource
 }
 
 jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
+  reports {
+    xml.enabled true
+    html.enabled false
+  }
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            version = project.version
-            artifactId = project.name
-            groupId = project.group
-            artifact("$buildDir/libs/${project.name}-${project.version}.jar")
-            artifact("$buildDir/distributions/${project.name}-${project.version}.zip")
-            artifact sourceJar {
-                classifier "sources"
-            }
-        }
+  publications {
+    mavenJava(MavenPublication) {
+      version = project.version
+      artifactId = project.name
+      groupId = project.group
+      artifact("$buildDir/libs/${project.name}-${project.version}.jar")
+      artifact("$buildDir/distributions/${project.name}-${project.version}.zip")
+      artifact sourceJar {
+        classifier "sources"
+      }
     }
+  }
 }
 
 check.dependsOn jacocoTestReport
@@ -95,5 +95,5 @@ build.dependsOn buildZip
 afterReleaseBuild.finalizedBy(publish)
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+  gradleVersion = '4.5.1'
 }
