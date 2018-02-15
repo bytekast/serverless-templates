@@ -1,0 +1,19 @@
+language: java
+jdk:
+  - oraclejdk8
+before_script:
+  - chmod +x gradlew
+  - chmod +x .travis_aws.sh
+  - "./.travis_aws.sh"
+before_install:
+  - npm i -g serverless@1.26.0
+install:
+  - echo "skip 'gradle assemble' step"
+script:
+  - "./gradlew build --info"
+before_deploy"
+  - "cd ./build/deploy"
+deploy:
+  provider: script
+  script: serverless deploy
+  skip_cleanup: true
