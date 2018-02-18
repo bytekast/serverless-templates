@@ -12,13 +12,13 @@ resource "aws_db_instance" "demo_db" {
   password             = "${var.demo_db_password}"
   final_snapshot_identifier = "${var.env}-demo-db-instance-final"
   publicly_accessible = true
-  vpc_security_group_ids = ["${aws_security_group.default_public_sg.id}"] // make private
+  vpc_security_group_ids = ["${aws_security_group.default_public_sg.id}"] // TODO - make private
   db_subnet_group_name   = "${aws_db_subnet_group.rds_subnet_group.id}"
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds_subnet_group"
-  subnet_ids = ["${aws_subnet.public_subnet_us_east_1a.id}", "${aws_subnet.public_subnet_us_east_1b.id}"] // make private
+  subnet_ids = ["${aws_subnet.public_subnet_us_east_1a.id}", "${aws_subnet.public_subnet_us_east_1b.id}"] // TODO - make private
 
   tags {
     Name = "rds-subnet-group"
