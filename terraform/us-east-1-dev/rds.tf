@@ -25,8 +25,16 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
   }
 }
 
-output "demo_db_instance_id" {
-  value = "${aws_db_instance.demo_db.id}"
+output "demo_db_instance_username" {
+  value = "${aws_db_instance.demo_db.username}"
+}
+
+output "demo_db_instance_password" {
+  value = "${aws_db_instance.demo_db.password}"
+}
+
+output "demo_db_instance_name" {
+  value = "${aws_db_instance.demo_db.name}"
 }
 
 output "demo_db_instance_address" {

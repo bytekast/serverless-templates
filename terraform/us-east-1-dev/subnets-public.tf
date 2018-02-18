@@ -32,27 +32,21 @@ resource "aws_subnet" "public_subnet_us_east_1b" {
   }
 }
 
-resource "aws_route_table" "public_rt" {
-  vpc_id = "${aws_vpc.default.id}"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
-  }
-
-  tags {
-    Name = "Public Subnet Route Table"
-  }
+resource "aws_route" "main_rt" {
+  route_table_id         = "${aws_vpc.default.main_route_table_id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.gw.id}"
 }
+
 
 resource "aws_route_table_association" "public_rt_a" {
   subnet_id = "${aws_subnet.public_subnet_us_east_1a.id}"
-  route_table_id = "${aws_route_table.public_rt.id}"
+  route_table_id = "${aws_vpc.default.main_route_table_id}"
 }
 
 resource "aws_route_table_association" "public_rt_b" {
   subnet_id = "${aws_subnet.public_subnet_us_east_1b.id}"
-  route_table_id = "${aws_route_table.public_rt.id}"
+  route_table_id = "${aws_vpc.default.main_route_table_id}"
 }
 
 resource "aws_security_group" "default_public_sg" {
@@ -99,4 +93,16 @@ resource "aws_security_group" "default_public_sg" {
   tags {
     Name = "Default Public Security Group"
   }
+}
+
+output "public_subnet_us_east_1a" {
+  value = "${aws_subnet.public_subnet_us_east_1a.id}"
+}
+
+output "public_subnet_us_east_1b" {
+  value = "${aws_subnet.public_subnet_us_east_1b.id}"
+}
+
+output "public_sg" {
+  value = "${aws_security_group.default_public_sg.id}"
 }
