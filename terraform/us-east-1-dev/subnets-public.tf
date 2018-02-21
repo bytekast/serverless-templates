@@ -88,6 +88,13 @@ resource "aws_security_group" "default_public_sg" {
     cidr_blocks = ["${var.public_subnet1_cidr}", "${var.public_subnet2_cidr}", "${var.allowed_external_postgres_cidr}"]
   }
 
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   vpc_id="${aws_vpc.default.id}"
 
   tags {
