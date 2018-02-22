@@ -7,7 +7,7 @@ import org.apache.log4j.Logger
 final Logger logger = Logger.getLogger(Functions.class)
 
 @CompileStatic
-def hello(Map input, Context context) {
+def echo(def input, Context context) {
   logger.info context?.invokedFunctionArn
-  'Hello'
+  input
 }

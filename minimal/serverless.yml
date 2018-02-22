@@ -11,5 +11,5 @@ package:
   artifact: ${file(build/build.json):distribution}
 
 functions:
-  hello:
-    handler: Functions::hello
+  echo:
+    handler: Functions::echo
