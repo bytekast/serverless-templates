@@ -20,11 +20,7 @@ targetCompatibility = 1.8
 
 dependencies {
   compile(
-      'org.codehaus.groovy:groovy-all:2.4.13',
-      'com.amazonaws:aws-lambda-java-core:1.1.0',
-      'com.amazonaws:aws-lambda-java-log4j:1.0.0',
-      'org.postgresql:postgresql:42.0.0',
-      'com.zaxxer:HikariCP:2.6.3'
+      'org.codehaus.groovy:groovy-all:2.4.13'
   )
 
   testCompile(
