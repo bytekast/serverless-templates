@@ -1,0 +1,56 @@
+plugins {
+  id 'idea'
+  id 'groovy'
+  id 'com.github.johnrengelman.shadow' version '2.0.2'
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+configurations.all {
+  resolutionStrategy {
+    cacheChangingModulesFor 0, 'seconds'
+  }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+  compile(
+      'org.codehaus.groovy:groovy-all:2.4.13',
+      'com.amazonaws:aws-lambda-java-core:1.1.0',
+      'com.amazonaws:aws-lambda-java-log4j:1.0.0',
+      'org.postgresql:postgresql:42.0.0',
+      'com.zaxxer:HikariCP:2.6.3'
+  )
+
+  testCompile(
+      'org.spockframework:spock-core:1.1-groovy-2.4'
+  )
+}
+
+task(buildJson) {
+  doLast {
+    def buildJson = new File("$buildDir/build.json")
+    def dist = relativePath(shadowJar.archivePath)
+    buildJson.newWriter().withWriter { w ->
+      w << groovy.json.JsonOutput.toJson([distribution: dist, version: shadowJar.version])
+    }
+  }
+}
+
+task buildZip(type: Zip) {
+  from('.') {
+    include 'serverless*.yml'
+    include 'node_modules/'
+    include 'build/build.json'
+    include relativePath(shadowJar.archivePath)
+  }
+}
+
+shadowJar.finalizedBy buildJson
+build.dependsOn shadowJar
+build.finalizedBy buildZip

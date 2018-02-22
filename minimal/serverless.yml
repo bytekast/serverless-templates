@@ -1,0 +1,15 @@
+
+service: minimal
+
+provider:
+  name: aws
+  runtime: java8
+  timeout: 300
+  profile: bytekast
+
+package:
+  artifact: ${file(build/build.json):distribution}
+
+functions:
+  hello:
+    handler: functions::hello
