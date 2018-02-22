@@ -34,10 +34,8 @@ dependencies {
 
 task(buildJson) {
   doLast {
-    def buildJson = new File("$buildDir/build.json")
-    def dist = relativePath(shadowJar.archivePath)
-    buildJson.newWriter().withWriter { w ->
-      w << groovy.json.JsonOutput.toJson([distribution: dist, version: shadowJar.version])
+    new File("$buildDir/build.json").newWriter().withWriter { w ->
+      w << groovy.json.JsonOutput.toJson([distribution: relativePath(shadowJar.archivePath), version: shadowJar.version])
     }
   }
 }
