@@ -16,7 +16,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
-  script: serverless deploy --stage prod
+  script: serverless deploy --stage dev
   skip_cleanup: true
 env:
   global:
