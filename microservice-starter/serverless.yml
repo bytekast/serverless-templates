@@ -1,0 +1,47 @@
+
+service: microservice-starter
+
+provider:
+  name: aws
+  runtime: java8
+  timeout: 300
+  memorySize: 1536
+  environment: ${file(serverless.env.yml):${self:provider.stage}}
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${opt:stage, self:custom.defaultStage}
+# vpc:
+#   securityGroupIds: ${self:custom.securityGroupIds.${self:provider.stage}}
+#   subnetIds: ${self:custom.subnetIds.${self:provider.stage}}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "sns:Publish"
+      Resource: arn:aws:sns:${self:provider.region}:${self:custom.accountId}:*
+
+custom:
+  accountId: ${self:custom.accountIds.${self:provider.stage}}
+  defaultStage: dev
+  accountIds:
+    dev: xxxxxxxx  # !!!REPLACE ME!!!
+    prod: xxxxxxxx # !!!REPLACE ME!!!
+  securityGroupIds:
+    dev:
+      - sg-xxxxxxxx # !!!REPLACE ME!!!
+    prod:
+      - sg-xxxxxxxx # !!!REPLACE ME!!!
+  subnetIds:
+    dev:
+      - subnet-xxxxxxxx # !!!REPLACE ME!!!
+      - subnet-xxxxxxxx # !!!REPLACE ME!!!
+    prod:
+      - subnet-xxxxxxxx # !!!REPLACE ME!!!
+      - subnet-xxxxxxxx # !!!REPLACE ME!!!
+
+package:
+  artifact: ${file(build/build.json):distribution}
+
+functions:
+  echo:
+    handler: Functions::echo
+    tags:
+      VERSION: ${file(build/build.json):version}

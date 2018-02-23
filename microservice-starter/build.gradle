@@ -1,0 +1,96 @@
+import org.gradle.api.tasks.wrapper.Wrapper
+
+plugins {
+  id 'idea'
+  id 'groovy'
+  id 'org.jetbrains.kotlin.jvm' version '1.2.0'
+  id 'jacoco'
+  id 'com.github.johnrengelman.shadow' version '2.0.2'
+  id 'net.researchgate.release' version '2.6.0'
+  id 'maven-publish'
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+configurations.all {
+  resolutionStrategy {
+    cacheChangingModulesFor 0, 'seconds'
+  }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+  compile(
+      'org.jetbrains.kotlin:kotlin-stdlib-jre8',
+      'org.jetbrains.kotlin:kotlin-reflect',
+      'org.jetbrains.kotlin:kotlin-runtime',
+      'org.codehaus.groovy:groovy-all:2.4.13',
+      'com.amazonaws:aws-lambda-java-core:1.1.0',
+      'com.amazonaws:aws-lambda-java-log4j:1.0.0',
+      'io.sentry:sentry-log4j:1.6.8'
+  )
+
+  testCompile(
+      'org.spockframework:spock-core:1.1-groovy-2.4'
+  )
+}
+
+task(buildJson) {
+  doLast {
+    new File("$buildDir/build.json").newWriter().withWriter { w ->
+      w << groovy.json.JsonOutput.toJson([distribution: relativePath(shadowJar.archivePath), version: shadowJar.version])
+    }
+  }
+}
+
+task buildZip(type: Zip) {
+  from('.') {
+    include 'serverless*.yml'
+    include 'node_modules/'
+    include 'build/build.json'
+    include relativePath(shadowJar.archivePath)
+  }
+}
+
+task sourceJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    html.enabled false
+  }
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      version = project.version
+      artifactId = project.name
+      groupId = project.group
+      artifact("$buildDir/libs/${project.name}-${project.version}.jar")
+      artifact("$buildDir/distributions/${project.name}-${project.version}.zip")
+      artifact sourceJar {
+        classifier "sources"
+      }
+    }
+  }
+}
+
+
+check.dependsOn jacocoTestReport
+classes.finalizedBy(sourceJar)
+shadowJar.finalizedBy buildJson
+build.dependsOn shadowJar
+build.finalizedBy buildZip
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.5.1'
+}

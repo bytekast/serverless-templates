@@ -1,0 +1,25 @@
+sudo: required
+language: java
+jdk:
+  - oraclejdk8
+before_script:
+  - chmod +x gradlew
+  - chmod +x .travis_aws.sh
+  - ./.travis_aws.sh
+before_install:
+  - npm i -g serverless
+install:
+  - echo "skip 'gradle assemble' step"
+script:
+  - ./gradlew build --info
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+deploy:
+  provider: script
+  script: serverless deploy --stage prod
+  skip_cleanup: true
+env:
+  global:
+    - DEV_AWS_KEY=xxxxxxxxxxxxxxxxxxxx    # REPLACE ME
+    - DEV_AWS_SECRET=xxxxxxxxxxxxxxxxxxxx # REPLACE ME
+    - CODECOV_TOKEN=xxxxxxxxxxxxxxxxxxxx  # REPLACE ME
