@@ -41,7 +41,12 @@ package:
   artifact: ${file(build/build.json):distribution}
 
 functions:
-  echo:
-    handler: Functions::echo
+  groovy-echo:
+    handler: com.bytekast.GroovyFunctions::echo
+    tags:
+      VERSION: ${file(build/build.json):version}
+
+  kotlin-echo:
+    handler: com.bytekast.KotlinFunctions::echo
     tags:
       VERSION: ${file(build/build.json):version}

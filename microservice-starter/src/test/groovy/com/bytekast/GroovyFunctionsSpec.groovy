@@ -2,12 +2,12 @@ package com.bytekast
 
 import spock.lang.Specification
 
-class FunctionsSpec extends Specification {
+class GroovyFunctionsSpec extends Specification {
 
-  def 'test echo function'() {
+  def 'test Groovy echo function'() {
 
     given:
-    def functions = new Functions()
+    def functions = new GroovyFunctions()
 
     when:
     def result = functions.echo('Hello', null)
