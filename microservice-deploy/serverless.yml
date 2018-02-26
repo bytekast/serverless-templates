@@ -1,0 +1,8 @@
+
+service: microservice-deploy
+
+provider:
+  name: aws
+  runtime: java8
+  timeout: 300
+  profile: ${opt:stage, 'dev'}
