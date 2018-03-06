@@ -1,0 +1,19 @@
+
+service: minimal-apiservice
+
+provider:
+  name: aws
+  runtime: java8
+  timeout: 300
+  profile: bytekast
+
+package:
+  artifact: ${file(build/build.json):distribution}
+
+functions:
+  echo:
+    handler: Functions::echo
+    events:
+      - http:
+          path: echo/{message}
+          method: get
