@@ -1,5 +1,5 @@
 
-service: minimal-apiservice
+service: minimal-apigateway
 
 provider:
   name: aws
