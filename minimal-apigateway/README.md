@@ -1,6 +1,6 @@
 # Simulate API Gateway Endpoints using a Local Server
 
-This demo project utilizes this **EXPRIMENTAL** [Gradle Plugin](https://plugins.gradle.org/plugin/com.bytekast.serverless-local-apigateway): https://github.com/bytekast/local-apigateway-gradle-plugin
+This demo project utilizes this **EXPRIMENTAL** [Gradle Plugin](https://plugins.gradle.org/plugin/com.bytekast.serverless-local-apigateway): **[local-apigateway-gradle-plugin](https://github.com/bytekast/local-apigateway-gradle-plugin)**
 
 Notice the plugins section of [build.gradle](build.gradle)
 ```groovy
