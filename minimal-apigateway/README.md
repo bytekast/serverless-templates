@@ -1,4 +1,14 @@
-# Serverless HTTP REST API with local server demo
+# Simulate API Gateway Endpoints using a Local Server
+
+This demo project utilizes this **EXPRIMENTAL** [Gradle Plugin](https://plugins.gradle.org/plugin/com.bytekast.serverless-local-apigateway): https://github.com/bytekast/local-apigateway-gradle-plugin
+
+Notice the plugins section of [build.gradle](build.gradle)
+```groovy
+plugins {
+  id "com.bytekast.serverless-local-apigateway" version "0.5"
+}
+```
+
 
 To create a project using this template, run
 ```
@@ -11,7 +21,7 @@ gradle clean build
 gradle run
 ```
 
-If you want the server to auto-update the running server when code changes are detected, run this instead:
+To auto-restart the running server when code changes are detected, run instead:
 ```bash
 gradle run --continuous
 ```
